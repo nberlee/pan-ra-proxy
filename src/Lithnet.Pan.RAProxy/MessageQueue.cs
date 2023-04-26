@@ -148,6 +148,7 @@ namespace Lithnet.Pan.RAProxy
                         continue;
                     }
 
+
                     foreach (RadiusAttribute v4Address in request.Attributes.Where(t => t.Type == RadiusAttribute.RadiusAttributeType.FramedIPAddress))
                     {
                         Entry e = new Entry
@@ -156,6 +157,9 @@ namespace Lithnet.Pan.RAProxy
                             IpAddress = v4Address.ValueAsString
                         };
 
+                        if (Config.LogonTimeout > -1) {
+                            e.Timeout = Config.LogonTimeout.ToString();
+                        }
                         items.Add(e);
                     }
 
@@ -166,6 +170,10 @@ namespace Lithnet.Pan.RAProxy
                             Username = username,
                             IpAddress = v6Address.ValueAsString
                         };
+
+                        if (Config.LogonTimeout > -1) {
+                            e.Timeout = Config.LogonTimeout.ToString();
+                        }
 
                         items.Add(e);
                     }
@@ -208,6 +216,12 @@ namespace Lithnet.Pan.RAProxy
 
                         case 2:
                             // Accounting stop
+                            if (Config.OnlyLogon)
+                            {
+                                Logging.CounterIgnoredPerSecond.Increment();
+                                Logging.WriteDebugEntry($"A radius accounting packet was discarded because it was an accounting stop and the configuration is set to only act on logon events", EventLogEntryType.Warning, Logging.EventIDInvalidRadiusPacket);
+                                break;
+                            }
 
                             foreach (Entry e in items)
                             {

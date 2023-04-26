@@ -53,6 +53,34 @@ namespace Lithnet.Pan.RAProxy
             }
         }
 
+        [ConfigurationProperty("only-logon", IsRequired = false, DefaultValue = false)]
+        public bool OnlyLogon
+        {
+            get
+            {
+                return (bool)base["only-logon"];
+            }
+
+            set
+            {
+                base["only-logon"] = value;
+            }
+        }
+
+        [ConfigurationProperty("logon-timeout", IsRequired = false, DefaultValue = -1)]
+        public int LogonTimeout
+        {
+            get
+            {
+                return (int)base["logon-timeout"];
+            }
+
+            set
+            {
+                base["logon-timeout"] = value;
+            }
+        }
+
         protected override object GetElementKey(ConfigurationElement element)
         {
             return ((PanApiEndpoint)element).ApiUri;

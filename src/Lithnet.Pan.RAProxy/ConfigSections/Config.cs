@@ -78,6 +78,10 @@ namespace Lithnet.Pan.RAProxy
 
         public static int BatchWait => Config.section.PanApi.BatchWait;
 
+        public static int LogonTimeout => Config.section.PanApi.LogonTimeout;
+
+        public static bool OnlyLogon => Config.section.PanApi.OnlyLogon;
+        
         private static Regex UsernameFilterRegex
         {
             get
